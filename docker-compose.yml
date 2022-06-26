@@ -1,0 +1,13 @@
+version: "3.5"
+
+services:
+  unittest:
+    container_name: unittest
+    build:
+      context: .
+      target: codebase
+    command: [go, test, "-failfast", "-coverprofile=/home/docker/mount/coverage.txt", "./..."]
+    working_dir: /home/docker/src
+    volumes:
+      - ./:/home/docker/mount
+    user: ${FIXUID:-1000}:${FIXGID:-1000}

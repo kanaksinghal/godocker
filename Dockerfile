@@ -6,7 +6,14 @@ RUN <<EOT
     adduser --uid 1000 --ingroup docker --home /home/docker --shell /bin/sh --disabled-password --gecos "" docker
     USER=docker
     GROUP=docker
-    curl -SsL https://github.com/boxboat/fixuid/releases/download/v0.5.1/fixuid-0.5.1-linux-arm64.tar.gz | tar -C /usr/local/bin -xzf -
+
+    # based on target arch, choose the binary format
+    case $TARGETARCH in arm64) ARCH=arm64 ;;
+    amd64) ARCH=amd64 ;;
+    *)  ARCH=amd64 ;;
+    esac
+
+    curl -SsL https://github.com/boxboat/fixuid/releases/download/v0.5.1/fixuid-0.5.1-linux-$ARCH.tar.gz | tar -C /usr/local/bin -xzf -
     chown root:root /usr/local/bin/fixuid
     chmod 4755 /usr/local/bin/fixuid
     mkdir -p /etc/fixuid
